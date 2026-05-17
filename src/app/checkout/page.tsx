@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useRef, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
-import Script from "next/script";
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements, PaymentElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import CheckoutForm, { type CheckoutFormHandle } from "@/components/CheckoutForm";
@@ -460,7 +459,6 @@ function CheckoutContent() {
   const [selectedCountry, setSelectedCountry] = useState(localeCountryMap[locale] || "US");
   const [buttonColor, setButtonColor] = useState("#111111");
   const [logoUrl, setLogoUrl] = useState<string | null>(null);
-  const [activePixels, setActivePixels] = useState<PixelData[]>([]);
 
   // Capturar UTM parameters da URL
   const utmParams: UtmParams = {
@@ -505,13 +503,25 @@ function CheckoutContent() {
       .catch(() => {});
   }, []);
 
-  // Fetch active pixels for this product
+  // Fetch active pixels for this product and inject scripts
   useEffect(() => {
     if (!productId) return;
     fetch(`/api/pixels/active?productId=${productId}`)
       .then((res) => res.json())
       .then((data) => {
-        if (data.pixels) setActivePixels(data.pixels);
+        if (!data.pixels) return;
+        data.pixels.forEach((pixel: PixelData) => {
+          if (pixel.platform !== "taboola") return;
+          const scriptId = `taboola-pixel-${pixel.id}`;
+          if (document.getElementById(scriptId)) return;
+          window._tfa = window._tfa || [];
+          window._tfa.push({ notify: "event", name: "page_view" });
+          const script = document.createElement("script");
+          script.id = scriptId;
+          script.async = true;
+          script.src = `//cdn.taboola.com/libtrc/unip/${pixel.pixel_id}/tfa.js`;
+          document.head.appendChild(script);
+        });
       })
       .catch(() => {});
   }, [productId]);
@@ -637,23 +647,6 @@ function CheckoutContent() {
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 
-      {/* Taboola Pixels - injetados por produto */}
-      {activePixels
-        .filter((p) => p.platform === "taboola")
-        .map((pixel) => (
-          <Script
-            key={pixel.id}
-            id={`taboola-pixel-${pixel.id}`}
-            strategy="afterInteractive"
-            dangerouslySetInnerHTML={{
-              __html: `
-                window._tfa = window._tfa || [];
-                _tfa.push({notify: 'event', name: 'page_view'});
-                !function(t,f,a,x){if(!document.getElementById(x)){t.async=1;t.src=a;t.id=x;f.parentNode.insertBefore(t,f);}}(document.createElement('script'),document.getElementsByTagName('script')[0],'//cdn.taboola.com/libtrc/unip/${pixel.pixel_id}/tfa.js','tb_tfa_script');
-              `,
-            }}
-          />
-        ))}
 
       <style jsx global>{`
         :root {
