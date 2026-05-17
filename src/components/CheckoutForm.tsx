@@ -3,33 +3,94 @@
 import { forwardRef, useState, useEffect, useRef, useImperativeHandle } from "react";
 import { type Locale } from "@/lib/i18n";
 
+const COUNTRY_NAMES: Record<string, Record<string, string>> = {
+  en: {
+    BR: "Brazil", US: "United States", PT: "Portugal", GB: "United Kingdom",
+    DE: "Germany", FR: "France", ES: "Spain", IT: "Italy",
+    JP: "Japan", KR: "South Korea", AU: "Australia", CA: "Canada",
+    MX: "Mexico", AR: "Argentina", CO: "Colombia", CL: "Chile",
+    PE: "Peru", NL: "Netherlands", SE: "Sweden", CH: "Switzerland",
+    AE: "United Arab Emirates", SG: "Singapore", IN: "India", CN: "China",
+    IE: "Ireland",
+  },
+  es: {
+    BR: "Brasil", US: "Estados Unidos", PT: "Portugal", GB: "Reino Unido",
+    DE: "Alemania", FR: "Francia", ES: "España", IT: "Italia",
+    JP: "Japón", KR: "Corea del Sur", AU: "Australia", CA: "Canadá",
+    MX: "México", AR: "Argentina", CO: "Colombia", CL: "Chile",
+    PE: "Perú", NL: "Países Bajos", SE: "Suecia", CH: "Suiza",
+    AE: "Emiratos Árabes Unidos", SG: "Singapur", IN: "India", CN: "China",
+    IE: "Irlanda",
+  },
+  pt: {
+    BR: "Brasil", US: "Estados Unidos", PT: "Portugal", GB: "Reino Unido",
+    DE: "Alemanha", FR: "França", ES: "Espanha", IT: "Itália",
+    JP: "Japão", KR: "Coreia do Sul", AU: "Austrália", CA: "Canadá",
+    MX: "México", AR: "Argentina", CO: "Colômbia", CL: "Chile",
+    PE: "Peru", NL: "Países Baixos", SE: "Suécia", CH: "Suíça",
+    AE: "Emirados Árabes", SG: "Singapura", IN: "Índia", CN: "China",
+    IE: "Irlanda",
+  },
+  fr: {
+    BR: "Brésil", US: "États-Unis", PT: "Portugal", GB: "Royaume-Uni",
+    DE: "Allemagne", FR: "France", ES: "Espagne", IT: "Italie",
+    JP: "Japon", KR: "Corée du Sud", AU: "Australie", CA: "Canada",
+    MX: "Mexique", AR: "Argentine", CO: "Colombie", CL: "Chili",
+    PE: "Pérou", NL: "Pays-Bas", SE: "Suède", CH: "Suisse",
+    AE: "Émirats arabes unis", SG: "Singapour", IN: "Inde", CN: "Chine",
+    IE: "Irlande",
+  },
+  de: {
+    BR: "Brasilien", US: "Vereinigte Staaten", PT: "Portugal", GB: "Vereinigtes Königreich",
+    DE: "Deutschland", FR: "Frankreich", ES: "Spanien", IT: "Italien",
+    JP: "Japan", KR: "Südkorea", AU: "Australien", CA: "Kanada",
+    MX: "Mexiko", AR: "Argentinien", CO: "Kolumbien", CL: "Chile",
+    PE: "Peru", NL: "Niederlande", SE: "Schweden", CH: "Schweiz",
+    AE: "Vereinigte Arabische Emirate", SG: "Singapur", IN: "Indien", CN: "China",
+    IE: "Irland",
+  },
+  it: {
+    BR: "Brasile", US: "Stati Uniti", PT: "Portogallo", GB: "Regno Unito",
+    DE: "Germania", FR: "Francia", ES: "Spagna", IT: "Italia",
+    JP: "Giappone", KR: "Corea del Sud", AU: "Australia", CA: "Canada",
+    MX: "Messico", AR: "Argentina", CO: "Colombia", CL: "Cile",
+    PE: "Perù", NL: "Paesi Bassi", SE: "Svezia", CH: "Svizzera",
+    AE: "Emirati Arabi Uniti", SG: "Singapore", IN: "India", CN: "Cina",
+    IE: "Irlanda",
+  },
+};
+
 const COUNTRIES = [
-  { code:"BR", name:"Brasil",          ddi:"+55",  flag:"br" },
-  { code:"US", name:"Estados Unidos",  ddi:"+1",   flag:"us" },
-  { code:"PT", name:"Portugal",        ddi:"+351", flag:"pt" },
-  { code:"GB", name:"Reino Unido",     ddi:"+44",  flag:"gb" },
-  { code:"DE", name:"Alemanha",        ddi:"+49",  flag:"de" },
-  { code:"FR", name:"França",          ddi:"+33",  flag:"fr" },
-  { code:"ES", name:"Espanha",         ddi:"+34",  flag:"es" },
-  { code:"IT", name:"Itália",          ddi:"+39",  flag:"it" },
-  { code:"JP", name:"Japão",           ddi:"+81",  flag:"jp" },
-  { code:"KR", name:"Coreia do Sul",   ddi:"+82",  flag:"kr" },
-  { code:"AU", name:"Austrália",       ddi:"+61",  flag:"au" },
-  { code:"CA", name:"Canadá",          ddi:"+1",   flag:"ca" },
-  { code:"MX", name:"México",          ddi:"+52",  flag:"mx" },
-  { code:"AR", name:"Argentina",       ddi:"+54",  flag:"ar" },
-  { code:"CO", name:"Colômbia",        ddi:"+57",  flag:"co" },
-  { code:"CL", name:"Chile",           ddi:"+56",  flag:"cl" },
-  { code:"PE", name:"Peru",            ddi:"+51",  flag:"pe" },
-  { code:"NL", name:"Países Baixos",   ddi:"+31",  flag:"nl" },
-  { code:"SE", name:"Suécia",          ddi:"+46",  flag:"se" },
-  { code:"CH", name:"Suíça",           ddi:"+41",  flag:"ch" },
-  { code:"AE", name:"Emirados Árabes", ddi:"+971", flag:"ae" },
-  { code:"SG", name:"Singapura",       ddi:"+65",  flag:"sg" },
-  { code:"IN", name:"Índia",           ddi:"+91",  flag:"in" },
-  { code:"CN", name:"China",           ddi:"+86",  flag:"cn" },
-  { code:"IE", name:"Irlanda",         ddi:"+353", flag:"ie" },
+  { code:"BR", ddi:"+55",  flag:"br" },
+  { code:"US", ddi:"+1",   flag:"us" },
+  { code:"PT", ddi:"+351", flag:"pt" },
+  { code:"GB", ddi:"+44",  flag:"gb" },
+  { code:"DE", ddi:"+49",  flag:"de" },
+  { code:"FR", ddi:"+33",  flag:"fr" },
+  { code:"ES", ddi:"+34",  flag:"es" },
+  { code:"IT", ddi:"+39",  flag:"it" },
+  { code:"JP", ddi:"+81",  flag:"jp" },
+  { code:"KR", ddi:"+82",  flag:"kr" },
+  { code:"AU", ddi:"+61",  flag:"au" },
+  { code:"CA", ddi:"+1",   flag:"ca" },
+  { code:"MX", ddi:"+52",  flag:"mx" },
+  { code:"AR", ddi:"+54",  flag:"ar" },
+  { code:"CO", ddi:"+57",  flag:"co" },
+  { code:"CL", ddi:"+56",  flag:"cl" },
+  { code:"PE", ddi:"+51",  flag:"pe" },
+  { code:"NL", ddi:"+31",  flag:"nl" },
+  { code:"SE", ddi:"+46",  flag:"se" },
+  { code:"CH", ddi:"+41",  flag:"ch" },
+  { code:"AE", ddi:"+971", flag:"ae" },
+  { code:"SG", ddi:"+65",  flag:"sg" },
+  { code:"IN", ddi:"+91",  flag:"in" },
+  { code:"CN", ddi:"+86",  flag:"cn" },
+  { code:"IE", ddi:"+353", flag:"ie" },
 ];
+
+function getCountryName(code: string, locale: string): string {
+  return COUNTRY_NAMES[locale]?.[code] || COUNTRY_NAMES.en[code] || code;
+}
 
 export interface CustomerData {
   name: string;
@@ -369,7 +430,7 @@ const CheckoutForm = forwardRef<CheckoutFormHandle, CheckoutFormProps>(function 
   };
 
   const filteredCountries = COUNTRIES.filter(c =>
-    c.name.toLowerCase().includes(search.toLowerCase()) ||
+    getCountryName(c.code, locale).toLowerCase().includes(search.toLowerCase()) ||
     c.ddi.includes(search)
   );
 
@@ -449,7 +510,7 @@ const CheckoutForm = forwardRef<CheckoutFormHandle, CheckoutFormProps>(function 
                         className={`w-full flex items-center gap-3 p-2.5 rounded-md transition-colors ${selectedCountry.code === c.code ? 'bg-[#111111] text-white' : 'hover:bg-[#f7f7f7]'}`}
                       >
                         <img src={`https://flagcdn.com/w40/${c.flag}.png`} alt={c.code} className="w-5 h-3.5 rounded-sm" />
-                        <span className="flex-1 text-left text-[13px] font-medium truncate">{c.name}</span>
+                        <span className="flex-1 text-left text-[13px] font-medium truncate">{getCountryName(c.code, locale)}</span>
                         <span className={`text-[12px] font-bold ${selectedCountry.code === c.code ? 'text-white/70' : 'text-[#999]'}`}>{c.ddi}</span>
                       </button>
                     ))}
@@ -476,7 +537,7 @@ const CheckoutForm = forwardRef<CheckoutFormHandle, CheckoutFormProps>(function 
               onChange={handleChange}
               className="w-full p-3.5 border-[1.5px] border-[#e0e0e0] rounded-lg outline-none bg-white text-[14.5px] font-medium appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2212%22%20height%3D%228%22%20viewBox%3D%220%200%2012%208%22%20fill%3D%22none%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%3E%3Cpath%20d%3D%22M1%201.5L6%206.5L11%201.5%22%20stroke%3D%22%23999%22%20stroke-width%3D%221.5%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22/%3E%3C/svg%3E')] bg-no-repeat bg-[right_1rem_center] pr-10"
             >
-              {COUNTRIES.map(c => <option key={c.code} value={c.code}>{c.name}</option>)}
+              {COUNTRIES.map(c => <option key={c.code} value={c.code}>{getCountryName(c.code, locale)}</option>)}
             </select>
           </div>
 
