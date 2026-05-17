@@ -61,7 +61,6 @@ export default function ProductsPage() {
   const [form, setForm] = useState<FormData>(emptyForm);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
-  const [copiedLink, setCopiedLink] = useState<string | null>(null);
 
   useEffect(() => {
     fetchProducts();
@@ -157,13 +156,11 @@ export default function ProductsPage() {
     }
   }
 
-  function copyCheckoutLink(product: Product) {
+  function openCheckout(product: Product) {
     const locale = product.locale || "en";
     const currency = product.currency || "usd";
-    const url = `${window.location.origin}/checkout?id=${product.id}&lang=${locale}&currency=${currency}`;
-    navigator.clipboard.writeText(url);
-    setCopiedLink(product.id);
-    setTimeout(() => setCopiedLink(null), 2000);
+    const url = `/checkout?id=${product.id}&lang=${locale}&currency=${currency}`;
+    window.open(url, "_blank");
   }
 
   function formatPrice(cents: number, currency: string) {
@@ -583,40 +580,31 @@ export default function ProductsPage() {
                 {/* Actions */}
                 <div style={{ display: "flex", gap: "0.35rem", flexShrink: 0 }}>
                   <button
-                    onClick={() => copyCheckoutLink(product)}
-                    title="Copiar link de checkout"
+                    onClick={() => openCheckout(product)}
+                    title="Abrir checkout"
                     style={{
-                      background: copiedLink === product.id ? "rgba(22,163,74,0.06)" : "#ffffff",
-                      border: `1px solid ${copiedLink === product.id ? "rgba(22,163,74,0.2)" : "#e5e7eb"}`,
+                      background: "#ffffff",
+                      border: "1px solid #e5e7eb",
                       borderRadius: "6px",
                       padding: "0.35rem 0.5rem",
                       cursor: "pointer",
-                      color: copiedLink === product.id ? "#16a34a" : "#9ca3af",
+                      color: "#9ca3af",
                       transition: "all 0.15s ease",
                     }}
                     onMouseEnter={(e) => {
-                      if (copiedLink !== product.id) {
-                        e.currentTarget.style.borderColor = "#111111";
-                        e.currentTarget.style.color = "#111111";
-                      }
+                      e.currentTarget.style.borderColor = "#111111";
+                      e.currentTarget.style.color = "#111111";
                     }}
                     onMouseLeave={(e) => {
-                      if (copiedLink !== product.id) {
-                        e.currentTarget.style.borderColor = "#e5e7eb";
-                        e.currentTarget.style.color = "#9ca3af";
-                      }
+                      e.currentTarget.style.borderColor = "#e5e7eb";
+                      e.currentTarget.style.color = "#9ca3af";
                     }}
                   >
-                    {copiedLink === product.id ? (
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M20 6L9 17l-5-5" />
-                      </svg>
-                    ) : (
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71" />
-                        <path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71" />
-                      </svg>
-                    )}
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6" />
+                      <polyline points="15 3 21 3 21 9" />
+                      <line x1="10" y1="14" x2="21" y2="3" />
+                    </svg>
                   </button>
                   <button
                     onClick={() => openEdit(product)}
@@ -670,24 +658,6 @@ export default function ProductsPage() {
                 </div>
               </div>
 
-              {/* Checkout Link */}
-              <div
-                style={{
-                  marginTop: "0.75rem",
-                  padding: "0.5rem 0.75rem",
-                  background: "#f3f4f6",
-                  borderRadius: "6px",
-                  fontSize: "0.6rem",
-                  color: "#6b7280",
-                }}
-              >
-                <span>
-                  Checkout:{" "}
-                  <code style={{ color: "#111111", fontSize: "0.6rem" }}>
-                    /checkout?id={product.id}&lang={product.locale}&currency={product.currency}
-                  </code>
-                </span>
-              </div>
             </div>
           )})}
         </div>

@@ -87,77 +87,143 @@ export default function DateSelector({ value, onChange }: DateSelectorProps) {
   });
 
   return (
-    <div style={{
-      display: "flex",
-      alignItems: "center",
-      gap: "0.5rem",
-      flexWrap: "wrap",
-    }}>
-      {/* Preset buttons */}
-      {presets.map((preset) => {
-        const range = preset.getRange();
-        const isActive = range.start === value.start && range.end === value.end;
-        return (
-          <button
-            key={preset.label}
-            onClick={() => onChange(range)}
-            style={{
-              padding: "0.35rem 0.75rem",
-              fontSize: "0.7rem",
-              fontWeight: isActive ? 600 : 500,
-              color: isActive ? "#fff" : "#6b7280",
-              background: isActive ? "#111111" : "transparent",
-              border: `1px solid ${isActive ? "#111111" : "#e5e7eb"}`,
-              borderRadius: "6px",
-              cursor: "pointer",
-              transition: "all 0.15s ease",
-              whiteSpace: "nowrap",
-            }}
-            onMouseEnter={(e) => {
-              if (!isActive) {
-                e.currentTarget.style.borderColor = "#111111";
-                e.currentTarget.style.color = "#111111";
-              }
-            }}
-            onMouseLeave={(e) => {
-              if (!isActive) {
-                e.currentTarget.style.borderColor = "#e5e7eb";
-                e.currentTarget.style.color = "#6b7280";
-              }
-            }}
-          >
-            {preset.label}
-          </button>
-        );
-      })}
+    <div className="date-selector">
+      <style jsx>{`
+        .date-selector {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          flex-wrap: wrap;
+        }
+        .date-desktop {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          flex-wrap: wrap;
+        }
+        .date-mobile {
+          display: none;
+        }
+        .date-select {
+          padding: 0.35rem 0.75rem;
+          font-size: 0.7rem;
+          font-weight: 500;
+          color: #111111;
+          background: #ffffff;
+          border: 1px solid #e5e7eb;
+          border-radius: 6px;
+          cursor: pointer;
+          appearance: none;
+          -webkit-appearance: none;
+          background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%236b7280' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+          background-repeat: no-repeat;
+          background-position: right 0.6rem center;
+          padding-right: 1.8rem;
+          font-family: 'Space Grotesk', sans-serif;
+        }
+        .custom-inputs {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          margin-left: 0.25rem;
+        }
+        @media (max-width: 640px) {
+          .date-desktop { display: none; }
+          .date-mobile { display: block; }
+          .custom-inputs {
+            margin-left: 0;
+            margin-top: 0.5rem;
+            flex-wrap: wrap;
+          }
+          .date-selector {
+            flex-direction: column;
+            align-items: flex-start;
+          }
+        }
+      `}</style>
 
-      {/* Custom date toggle */}
-      <button
-        onClick={() => setShowCustom(!showCustom)}
-        style={{
-          padding: "0.35rem 0.75rem",
-          fontSize: "0.7rem",
-          fontWeight: showCustom ? 600 : 500,
-          color: showCustom ? "#fff" : "#6b7280",
-          background: showCustom ? "#111111" : "transparent",
-          border: `1px solid ${showCustom ? "#111111" : "#e5e7eb"}`,
-          borderRadius: "6px",
-          cursor: "pointer",
-          transition: "all 0.15s ease",
-          whiteSpace: "nowrap",
-        }}
-      >
-        Personalizado
-      </button>
+      {/* Desktop: horizontal buttons */}
+      <div className="date-desktop">
+        {presets.map((preset) => {
+          const range = preset.getRange();
+          const isActive = range.start === value.start && range.end === value.end;
+          return (
+            <button
+              key={preset.label}
+              onClick={() => onChange(range)}
+              style={{
+                padding: "0.35rem 0.75rem",
+                fontSize: "0.7rem",
+                fontWeight: isActive ? 600 : 500,
+                color: isActive ? "#fff" : "#6b7280",
+                background: isActive ? "#111111" : "transparent",
+                border: `1px solid ${isActive ? "#111111" : "#e5e7eb"}`,
+                borderRadius: "6px",
+                cursor: "pointer",
+                transition: "all 0.15s ease",
+                whiteSpace: "nowrap",
+              }}
+              onMouseEnter={(e) => {
+                if (!isActive) {
+                  e.currentTarget.style.borderColor = "#111111";
+                  e.currentTarget.style.color = "#111111";
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (!isActive) {
+                  e.currentTarget.style.borderColor = "#e5e7eb";
+                  e.currentTarget.style.color = "#6b7280";
+                }
+              }}
+            >
+              {preset.label}
+            </button>
+          );
+        })}
+        <button
+          onClick={() => setShowCustom(!showCustom)}
+          style={{
+            padding: "0.35rem 0.75rem",
+            fontSize: "0.7rem",
+            fontWeight: showCustom ? 600 : 500,
+            color: showCustom ? "#fff" : "#6b7280",
+            background: showCustom ? "#111111" : "transparent",
+            border: `1px solid ${showCustom ? "#111111" : "#e5e7eb"}`,
+            borderRadius: "6px",
+            cursor: "pointer",
+            transition: "all 0.15s ease",
+            whiteSpace: "nowrap",
+          }}
+        >
+          Personalizado
+        </button>
+      </div>
+
+      {/* Mobile: dropdown select */}
+      <div className="date-mobile">
+        <select
+          className="date-select"
+          value={activePreset ? activePreset.label : "Personalizado"}
+          onChange={(e) => {
+            const preset = presets.find((p) => p.label === e.target.value);
+            if (preset) {
+              setShowCustom(false);
+              onChange(preset.getRange());
+            } else {
+              setShowCustom(true);
+            }
+          }}
+        >
+          {presets.map((p) => (
+            <option key={p.label} value={p.label}>{p.label}</option>
+          ))}
+          <option value="Personalizado">Personalizado</option>
+        </select>
+      </div>
 
       {/* Custom date inputs */}
       {showCustom && (
-        <div style={{
-          display: "flex",
-          alignItems: "center",
-          gap: "0.5rem",
-          marginLeft: "0.25rem",
-        }}>
+        <div className="custom-inputs">
           <input
             type="date"
             value={value.start}
@@ -188,9 +254,9 @@ export default function DateSelector({ value, onChange }: DateSelectorProps) {
         </div>
       )}
 
-      {/* Current filter label */}
+      {/* Current filter label (desktop only, when custom range not matching presets) */}
       {!activePreset && !showCustom && (
-        <span style={{ fontSize: "0.65rem", color: "#9ca3af", marginLeft: "0.25rem" }}>
+        <span className="date-desktop" style={{ fontSize: "0.65rem", color: "#9ca3af", marginLeft: "0.25rem" }}>
           {value.label}
         </span>
       )}

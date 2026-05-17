@@ -16,12 +16,23 @@ export default async function DashboardLayout({
   }
 
   return (
-    <div style={{ minHeight: "100vh", background: "#ffffff", fontFamily: "'Space Grotesk', sans-serif" }}>
+    <div style={{ minHeight: "100vh", background: "#ffffff", fontFamily: "'Space Grotesk', sans-serif", overflowX: "hidden" }}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+      <style>{`
+        .admin-layout-content {
+          margin-left: 260px;
+          min-height: 100vh;
+        }
+        @media (max-width: 768px) {
+          .admin-layout-content {
+            margin-left: 64px;
+          }
+        }
+      `}</style>
       <Sidebar />
-      <div className="ml-72 min-h-screen">
-        <main className="p-6 md:p-8 lg:p-10">
+      <div className="admin-layout-content">
+        <main className="p-4 md:p-6 lg:p-8">
           {children}
         </main>
       </div>

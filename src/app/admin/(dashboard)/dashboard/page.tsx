@@ -120,7 +120,6 @@ export default function AdminDashboardPage() {
     const pending = filteredOrders.filter((o) => o.status === "pending");
     const failed = filteredOrders.filter((o) => o.status === "failed");
 
-    // Revenue by currency
     const eurOrders = paid.filter((o) => o.currency.toLowerCase() === "eur");
     const usdOrders = paid.filter((o) => o.currency.toLowerCase() === "usd");
     const totalEUR = eurOrders.reduce((sum, o) => sum + o.amount, 0);
@@ -185,7 +184,7 @@ export default function AdminDashboardPage() {
   };
 
   return (
-    <div style={{ fontFamily: "'Space Grotesk', sans-serif", display: "flex", flexDirection: "column", gap: "1.5rem" }}>
+    <div className="dashboard-root" style={{ fontFamily: "'Space Grotesk', sans-serif", display: "flex", flexDirection: "column", gap: "1.5rem" }}>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link
         href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap"
@@ -201,10 +200,94 @@ export default function AdminDashboardPage() {
           from { opacity: 0; transform: translateY(12px); }
           to { opacity: 1; transform: translateY(0); }
         }
+        .dashboard-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+        }
+        .metrics-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+          gap: 0.75rem;
+        }
+        .bottom-grid {
+          display: grid;
+          grid-template-columns: 1fr 1.5fr;
+          gap: 1.5rem;
+        }
+        .orders-table {
+          width: 100%;
+          border-collapse: collapse;
+        }
+        .orders-table th {
+          padding: 0.6rem 1.25rem;
+          text-align: left;
+          font-size: 0.6rem;
+          font-weight: 400;
+          color: #9ca3af;
+          text-transform: uppercase;
+          letter-spacing: 0.14em;
+          border-bottom: 1px solid #e5e7eb;
+        }
+        .orders-table td {
+          padding: 0.65rem 1.25rem;
+          font-size: 0.75rem;
+          color: #111111;
+        }
+        .orders-table tr {
+          border-bottom: 1px solid #f3f4f6;
+          transition: background 0.15s ease;
+        }
+        .orders-table tr:hover {
+          background: #f9fafb;
+        }
+        .order-card-mobile {
+          display: none;
+        }
+
+        @media (max-width: 640px) {
+          .dashboard-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.75rem;
+          }
+          .dashboard-header .refresh-btn {
+            align-self: flex-end;
+            padding: 0.4rem;
+          }
+          .dashboard-header .refresh-btn span {
+            display: none;
+          }
+          .metrics-grid {
+            grid-template-columns: 1fr;
+          }
+          .bottom-grid {
+            grid-template-columns: 1fr;
+          }
+          .orders-table thead {
+            display: none;
+          }
+          .orders-table tbody tr {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.25rem 0.75rem;
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid #f3f4f6;
+          }
+          .orders-table tbody td {
+            padding: 0;
+            border: none;
+          }
+          .orders-table tbody td:first-child {
+            width: 100%;
+            font-weight: 600;
+            margin-bottom: 0.15rem;
+          }
+        }
       `}</style>
 
       {/* Header */}
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+      <div className="dashboard-header">
         <div>
           <h1
             style={{
@@ -223,6 +306,7 @@ export default function AdminDashboardPage() {
           </p>
         </div>
         <button
+          className="refresh-btn"
           onClick={() => window.location.reload()}
           style={{
             background: "#ffffff",
@@ -250,7 +334,7 @@ export default function AdminDashboardPage() {
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
             <path d="M21 12a9 9 0 11-6.219-8.56" />
           </svg>
-          Atualizar
+          <span>Atualizar</span>
         </button>
       </div>
 
@@ -259,7 +343,7 @@ export default function AdminDashboardPage() {
 
       {/* Metric Cards */}
       {loading ? (
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "0.75rem" }}>
+        <div className="metrics-grid">
           {[0, 1, 2, 3].map((i) => (
             <div
               key={i}
@@ -313,10 +397,8 @@ export default function AdminDashboardPage() {
         </div>
       ) : (
         <div
+          className="metrics-grid"
           style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
-            gap: "0.75rem",
             animation: "fadeUp 0.5s ease forwards",
           }}
         >
@@ -327,12 +409,12 @@ export default function AdminDashboardPage() {
             onMouseLeave={(e) => (e.currentTarget.style.borderColor = "#e5e7eb")}
           >
             <div style={{ display: "flex", alignItems: "center", gap: "0.85rem" }}>
-              <div style={{ width: "44px", height: "44px", borderRadius: "10px", background: "#f3f4f6", display: "flex", alignItems: "center", justifyContent: "center" }}>
+              <div style={{ width: "44px", height: "44px", borderRadius: "10px", background: "#f3f4f6", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
                 <span style={{ fontSize: "16px", fontWeight: 700, color: "#111111" }}>€</span>
               </div>
-              <div>
+              <div style={{ minWidth: 0 }}>
                 <p style={labelStyle}>Vendas EUR</p>
-                <p style={valueStyle}>
+                <p style={{ ...valueStyle, fontSize: "clamp(1rem, 3vw, 1.25rem)" }}>
                   {new Intl.NumberFormat("pt-BR", { style: "currency", currency: "EUR" }).format(stats.totalEUR / 100)}
                 </p>
               </div>
@@ -346,31 +428,31 @@ export default function AdminDashboardPage() {
             onMouseLeave={(e) => (e.currentTarget.style.borderColor = "#e5e7eb")}
           >
             <div style={{ display: "flex", alignItems: "center", gap: "0.85rem" }}>
-              <div style={{ width: "44px", height: "44px", borderRadius: "10px", background: "#f3f4f6", display: "flex", alignItems: "center", justifyContent: "center" }}>
+              <div style={{ width: "44px", height: "44px", borderRadius: "10px", background: "#f3f4f6", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
                 <span style={{ fontSize: "16px", fontWeight: 700, color: "#111111" }}>$</span>
               </div>
-              <div>
+              <div style={{ minWidth: 0 }}>
                 <p style={labelStyle}>Vendas USD</p>
-                <p style={valueStyle}>
+                <p style={{ ...valueStyle, fontSize: "clamp(1rem, 3vw, 1.25rem)" }}>
                   {new Intl.NumberFormat("pt-BR", { style: "currency", currency: "USD" }).format(stats.totalUSD / 100)}
                 </p>
               </div>
             </div>
           </div>
 
-          {/* Total BRL Card (converted) */}
+          {/* Total BRL Card */}
           <div
             style={cardStyle}
             onMouseEnter={(e) => (e.currentTarget.style.borderColor = "#16a34a")}
             onMouseLeave={(e) => (e.currentTarget.style.borderColor = "#e5e7eb")}
           >
             <div style={{ display: "flex", alignItems: "center", gap: "0.85rem" }}>
-              <div style={{ width: "44px", height: "44px", borderRadius: "10px", background: "rgba(22,163,74,0.06)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+              <div style={{ width: "44px", height: "44px", borderRadius: "10px", background: "rgba(22,163,74,0.06)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
                 <span style={{ fontSize: "16px", fontWeight: 700, color: "#16a34a" }}>R$</span>
               </div>
-              <div>
+              <div style={{ minWidth: 0 }}>
                 <p style={labelStyle}>Total em BRL</p>
-                <p style={{ ...valueStyle, color: "#16a34a" }}>
+                <p style={{ ...valueStyle, color: "#16a34a", fontSize: "clamp(1rem, 3vw, 1.25rem)" }}>
                   {new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(
                     (stats.totalEUR / 100) * rates.EUR_BRL + (stats.totalUSD / 100) * rates.USD_BRL
                   )}
@@ -389,12 +471,12 @@ export default function AdminDashboardPage() {
             onMouseLeave={(e) => (e.currentTarget.style.borderColor = "#e5e7eb")}
           >
             <div style={{ display: "flex", alignItems: "center", gap: "0.85rem" }}>
-              <div style={{ width: "44px", height: "44px", borderRadius: "10px", background: "rgba(22,163,74,0.06)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+              <div style={{ width: "44px", height: "44px", borderRadius: "10px", background: "rgba(22,163,74,0.06)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#16a34a" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </div>
-              <div>
+              <div style={{ minWidth: 0 }}>
                 <p style={labelStyle}>Pagos</p>
                 <p style={valueStyle}>{stats.paid.length}</p>
               </div>
@@ -428,44 +510,47 @@ export default function AdminDashboardPage() {
             </div>
           </div>
           {mounted ? (
-            <ResponsiveContainer width="100%" height={280}>
-              <AreaChart data={chartData} margin={{ top: 5, right: 10, left: 10, bottom: 0 }}>
-                <defs>
-                  <linearGradient id="gradientReceita" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#111111" stopOpacity={0.15} />
-                    <stop offset="100%" stopColor="#111111" stopOpacity={0.02} />
-                  </linearGradient>
-                </defs>
-                <CartesianGrid stroke="#e5e7eb" strokeDasharray="3 3" vertical={false} />
-                <XAxis
-                  dataKey="date"
-                  tick={{ fontSize: 10, fill: "#6b7280", fontFamily: "'Space Grotesk', sans-serif" }}
-                  tickLine={false}
-                  axisLine={{ stroke: "#e5e7eb" }}
-                  interval="preserveStartEnd"
-                />
-                <YAxis
-                  tick={{ fontSize: 10, fill: "#6b7280", fontFamily: "'Space Grotesk', sans-serif" }}
-                  tickLine={false}
-                  axisLine={false}
-                  tickFormatter={(v: number) => `R$${v}`}
-                />
-                <Tooltip content={<CustomTooltip />} />
-                <Area
-                  type="monotone"
-                  dataKey="receita"
-                  stroke="#111111"
-                  strokeWidth={2}
-                  fill="url(#gradientReceita)"
-                  animationDuration={1500}
-                  animationEasing="ease-out"
-                />
-              </AreaChart>
-            </ResponsiveContainer>
+            <div className="chart-container">
+              <ResponsiveContainer width="100%" height="100%">
+                <AreaChart data={chartData} margin={{ top: 5, right: 10, left: 10, bottom: 0 }}>
+                  <defs>
+                    <linearGradient id="gradientReceita" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor="#111111" stopOpacity={0.15} />
+                      <stop offset="100%" stopColor="#111111" stopOpacity={0.02} />
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid stroke="#e5e7eb" strokeDasharray="3 3" vertical={false} />
+                  <XAxis
+                    dataKey="date"
+                    tick={{ fontSize: 10, fill: "#6b7280", fontFamily: "'Space Grotesk', sans-serif" }}
+                    tickLine={false}
+                    axisLine={{ stroke: "#e5e7eb" }}
+                    interval="preserveStartEnd"
+                  />
+                  <YAxis
+                    tick={{ fontSize: 10, fill: "#6b7280", fontFamily: "'Space Grotesk', sans-serif" }}
+                    tickLine={false}
+                    axisLine={false}
+                    tickFormatter={(v: number) => `R$${v}`}
+                    width={50}
+                  />
+                  <Tooltip content={<CustomTooltip />} />
+                  <Area
+                    type="monotone"
+                    dataKey="receita"
+                    stroke="#111111"
+                    strokeWidth={2}
+                    fill="url(#gradientReceita)"
+                    animationDuration={1500}
+                    animationEasing="ease-out"
+                  />
+                </AreaChart>
+              </ResponsiveContainer>
+            </div>
           ) : (
             <div
               style={{
-                height: "280px",
+                height: "200px",
                 borderRadius: "8px",
                 background: "linear-gradient(90deg, #f3f4f6 25%, #e5e7eb 50%, #f3f4f6 75%)",
                 backgroundSize: "200% 100%",
@@ -479,10 +564,8 @@ export default function AdminDashboardPage() {
       {/* Bottom Row: Status Breakdown + Recent Orders */}
       {!loading && (
         <div
+          className="bottom-grid"
           style={{
-            display: "grid",
-            gridTemplateColumns: "1fr 1.5fr",
-            gap: "1.5rem",
             animation: "fadeUp 0.5s ease 0.2s forwards",
             opacity: 0,
           }}
@@ -595,25 +678,11 @@ export default function AdminDashboardPage() {
               </Link>
             </div>
             {recentOrders.length > 0 ? (
-              <table style={{ width: "100%", borderCollapse: "collapse" }}>
+              <table className="orders-table">
                 <thead>
                   <tr>
                     {["ID", "Cliente", "Valor", "Status", "Data"].map((h) => (
-                      <th
-                        key={h}
-                        style={{
-                          padding: "0.6rem 1.25rem",
-                          textAlign: "left",
-                          fontSize: "0.6rem",
-                          fontWeight: 400,
-                          color: "#9ca3af",
-                          textTransform: "uppercase",
-                          letterSpacing: "0.14em",
-                          borderBottom: "1px solid #e5e7eb",
-                        }}
-                      >
-                        {h}
-                      </th>
+                      <th key={h}>{h}</th>
                     ))}
                   </tr>
                 </thead>
@@ -621,22 +690,13 @@ export default function AdminDashboardPage() {
                   {recentOrders.map((order) => {
                     const sc = STATUS_CONFIG[order.status] || STATUS_CONFIG.pending;
                     return (
-                      <tr
-                        key={order.id}
-                        style={{ borderBottom: "1px solid #f3f4f6", transition: "background 0.15s ease" }}
-                        onMouseEnter={(e) => (e.currentTarget.style.background = "#f9fafb")}
-                        onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
-                      >
-                        <td style={{ padding: "0.65rem 1.25rem", fontSize: "0.75rem", color: "#111111", fontWeight: 500 }}>
+                      <tr key={order.id}>
+                        <td style={{ fontWeight: 500 }}>
                           #{order.id.slice(0, 8).toUpperCase()}
                         </td>
-                        <td style={{ padding: "0.65rem 1.25rem", fontSize: "0.75rem", color: "#111111" }}>
-                          {order.customer_name}
-                        </td>
-                        <td style={{ padding: "0.65rem 1.25rem", fontSize: "0.75rem", color: "#111111" }}>
-                          {formatPrice(order.amount, order.currency)}
-                        </td>
-                        <td style={{ padding: "0.65rem 1.25rem" }}>
+                        <td>{order.customer_name}</td>
+                        <td>{formatPrice(order.amount, order.currency)}</td>
+                        <td>
                           <span
                             style={{
                               display: "inline-flex",
@@ -660,7 +720,7 @@ export default function AdminDashboardPage() {
                             {sc.label}
                           </span>
                         </td>
-                        <td style={{ padding: "0.65rem 1.25rem", fontSize: "0.7rem", color: "#6b7280" }}>
+                        <td style={{ fontSize: "0.7rem", color: "#6b7280" }}>
                           {formatDate(order.created_at)}
                         </td>
                       </tr>
@@ -677,11 +737,13 @@ export default function AdminDashboardPage() {
         </div>
       )}
 
-      {/* Responsive style for bottom grid */}
       <style jsx>{`
-        @media (max-width: 768px) {
-          div[style*="grid-template-columns: 1fr 1.5fr"] {
-            grid-template-columns: 1fr !important;
+        .chart-container {
+          height: 280px;
+        }
+        @media (max-width: 640px) {
+          .chart-container {
+            height: 180px;
           }
         }
       `}</style>
