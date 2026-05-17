@@ -1,0 +1,102 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Product {
+  id              String   @id @default(cuid())
+  slug            String   // mesmo slug pode ter varios idiomas
+  name            String
+  description     String?
+  locale          String   @default("en") // en, es, pt, fr, de, it
+  currency        String   @default("usd") // usd, eur, brl
+  price           Int      // centavos
+  stripe_price_id String?
+  image_url       String?
+  active          Boolean  @default(true)
+  created_at      DateTime @default(now())
+  updated_at      DateTime @updatedAt
+
+  orders          Order[]
+
+  @@unique([slug, locale])
+  @@index([active])
+}
+
+model Shipping {
+  id         String   @id @default(cuid())
+  country    String   // código do país (ex: "BR", "US")
+  price      Int      // centavos
+  days_min   Int      // prazo mínimo em dias
+  days_max   Int      // prazo máximo em dias
+  active     Boolean  @default(true)
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@unique([country])
+  @@index([active])
+}
+
+model EmailTemplate {
+  id         String   @id @default(cuid())
+  type       String   // "approved" ou "declined"
+  locale     String   @default("en") // "en" ou "es"
+  subject    String
+  html       String
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@unique([type, locale])
+}
+
+model Order {
+  id                    String   @id @default(cuid())
+  stripe_payment_intent String   @unique
+  status                String   @default("pending")
+  customer_name         String
+  customer_email        String
+  customer_phone        String
+  country               String
+  address               String
+  product_name          String
+  product_id            String?
+  locale                String   @default("en")
+  amount                Int // em centavos
+  currency              String   @default("usd")
+  tracking_code         String?
+  shipping_name         String? // nome do frete (ex: "Envio Padrão")
+  shipping_price        Int?    // centavos do frete
+  shipping_days_min     Int?    // prazo mínimo em dias
+  shipping_days_max     Int?    // prazo máximo em dias
+  email_confirmation    DateTime?
+  email_tracking        DateTime?
+  email_delivery        DateTime?
+  utm_source            String?
+  utm_medium            String?
+  utm_campaign          String?
+  utm_content           String?
+  utm_term              String?
+  utm_placement         String?
+  utm_id                String?
+  utm_creative_name     String?
+  created_at            DateTime @default(now())
+  updated_at            DateTime @updatedAt
+
+  product               Product? @relation(fields: [product_id], references: [id])
+
+  @@index([status])
+  @@index([customer_email])
+  @@index([created_at])
+}
+
+model CheckoutSetting {
+  id            String   @id @default(cuid())
+  button_color  String   @default("#111111")
+  logo_url      String?
+  updated_at    DateTime @updatedAt
+}

@@ -1,0 +1,347 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+.co-wrap{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;background:#f0f2f5;padding:32px 16px 64px;min-height:600px;color:#111}
+.co-inner{max-width:520px;margin:0 auto}
+.co-logo{display:flex;align-items:center;gap:9px;margin-bottom:26px}
+.co-logo-box{width:36px;height:36px;background:#18181b;border-radius:9px;display:flex;align-items:center;justify-content:center}
+.co-logo-box svg{width:18px;height:18px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.co-logo-name{font-size:18px;font-weight:700;color:#18181b;letter-spacing:-.4px}
+.co-prod{background:#ffffff;border:1px solid #e2e5ea;border-radius:14px;padding:18px 20px;margin-bottom:18px;display:flex;align-items:center;gap:16px}
+.co-prod-img{width:58px;height:58px;background:#f5f6f8;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0}
+.co-prod-name{font-size:15px;font-weight:700;color:#18181b;margin-bottom:2px}
+.co-prod-sub{font-size:13px;color:#888;margin-bottom:7px}
+.co-prod-price{font-size:26px;font-weight:800;color:#18181b;letter-spacing:-.6px;line-height:1}
+.co-trust{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:18px}
+.co-chip{display:flex;align-items:center;gap:5px;background:#ffffff;border:1px solid #e2e5ea;border-radius:100px;padding:5px 11px;font-size:12px;color:#555;font-weight:500}
+.co-chip svg{width:12px;height:12px;stroke:#555;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
+.co-prog-track{height:4px;background:#e2e5ea;border-radius:100px;overflow:hidden;margin-bottom:9px}
+.co-prog-fill{height:100%;border-radius:100px;background:#18181b;transition:width .4s ease}
+.co-steps{display:flex;justify-content:space-between;margin-bottom:22px}
+.co-step{font-size:12px;color:#bbb;font-weight:500}
+.co-step.on{color:#18181b;font-weight:700}
+.co-card{background:#ffffff;border:1px solid #e2e5ea;border-radius:14px;padding:24px;margin-bottom:14px}
+.co-stitle{font-size:11px;font-weight:700;letter-spacing:.9px;color:#aaa;text-transform:uppercase;margin-bottom:20px}
+.co-fg{display:flex;flex-direction:column;gap:15px}
+.co-row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.co-f{display:flex;flex-direction:column;gap:6px}
+.co-f>label{font-size:12px;font-weight:600;color:#444;letter-spacing:.15px}
+
+.co-f input,
+.co-f select{
+  height:58px !important;
+  padding:0 16px !important;
+  border:1.5px solid #d8dbe2 !important;
+  border-radius:10px !important;
+  font-size:15px !important;
+  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif !important;
+  color:#18181b !important;
+  background:#ffffff !important;
+  outline:none !important;
+  width:100% !important;
+  appearance:none !important;
+  -webkit-appearance:none !important;
+  -moz-appearance:none !important;
+  transition:border-color .15s,box-shadow .15s !important;
+  box-shadow:none !important;
+  display:block !important;
+}
+.co-f input::placeholder{color:#c0c4cc !important}
+.co-f input:focus,
+.co-f select:focus{
+  border-color:#18181b !important;
+  box-shadow:0 0 0 3px rgba(24,24,27,.08) !important;
+  background:#ffffff !important;
+}
+.co-f input:hover,
+.co-f select:hover{border-color:#b0b5bf !important}
+
+.co-selwrap{position:relative}
+.co-selwrap select{padding-right:36px !important}
+.co-selwrap::after{content:'';position:absolute;right:14px;top:50%;transform:translateY(-50%);width:0;height:0;border-left:4px solid transparent;border-right:4px solid transparent;border-top:5px solid #888;pointer-events:none}
+
+.co-phone-row{display:flex;gap:10px}
+.co-phone-code{width:118px;flex-shrink:0}
+
+.co-stripe-el{
+  height:58px !important;
+  padding:0 16px !important;
+  border:1.5px solid #d8dbe2 !important;
+  border-radius:10px !important;
+  background:#ffffff !important;
+  display:flex !important;
+  align-items:center !important;
+  transition:border-color .15s,box-shadow .15s !important;
+}
+.co-stripe-el.StripeElement--focus{border-color:#18181b !important;box-shadow:0 0 0 3px rgba(24,24,27,.08) !important}
+.co-stripe-el.StripeElement--invalid{border-color:#dc2626 !important}
+
+.co-summary{background:#f7f8fa;border-radius:10px;padding:16px;margin-top:16px}
+.co-sum-line{display:flex;justify-content:space-between;font-size:14px;color:#777;margin-bottom:8px}
+.co-sum-line:last-child{margin-bottom:0}
+.co-sum-total{color:#18181b;font-weight:700;font-size:16px;padding-top:10px;border-top:1px solid #e2e5ea;margin-top:2px}
+.co-green{color:#16a34a;font-weight:600}
+
+.co-btn-row{display:flex;gap:10px;margin-top:16px}
+.co-btn-back{width:58px;height:58px;flex-shrink:0;border:1.5px solid #d8dbe2;border-radius:10px;background:#ffffff;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:border-color .15s}
+.co-btn-back:hover{border-color:#999}
+.co-btn-back svg{width:19px;height:19px;stroke:#555;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}
+
+.co-btn-pay{
+  flex:1;height:58px;
+  background:#18181b;color:#ffffff;
+  border:none;border-radius:10px;
+  font-size:16px;font-weight:700;
+  font-family:inherit;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  letter-spacing:-.2px;transition:opacity .15s
+}
+.co-btn-pay:hover{opacity:.87}
+.co-btn-pay:active{opacity:.8}
+.co-btn-pay:disabled{opacity:.4;cursor:not-allowed}
+.co-btn-pay svg{width:17px;height:17px;stroke:#fff;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}
+
+.co-secure{display:flex;align-items:center;justify-content:center;gap:5px;font-size:12px;color:#aaa;margin-top:10px}
+.co-secure svg{width:12px;height:12px;stroke:#aaa;fill:none;stroke-width:2;stroke-linecap:round}
+.co-err{color:#dc2626;font-size:13px;margin-top:8px;display:none}
+
+.co-success{display:none;text-align:center;padding:48px 20px}
+.co-success-ring{width:72px;height:72px;background:#dcfce7;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 20px}
+.co-success-ring svg{width:32px;height:32px;stroke:#16a34a;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}
+.co-success h2{font-size:26px;font-weight:800;color:#18181b;letter-spacing:-.5px;margin-bottom:8px}
+.co-success p{font-size:15px;color:#666;line-height:1.65}
+.co-success-note{margin-top:18px;background:#f7f8fa;border-radius:10px;padding:16px;font-size:13px;color:#666;line-height:1.7;text-align:left}
+</style>
+
+<div class="co-wrap">
+<div class="co-inner">
+
+  <div class="co-logo">
+    <div class="co-logo-box">
+      <svg viewBox="0 0 18 18"><path d="M9 2l2.2 4.4 4.8.7-3.5 3.4.83 4.9L9 13.3l-4.33 2.2.83-4.9L2 7.1l4.8-.7z"/></svg>
+    </div>
+    <span class="co-logo-name">YourBrand</span>
+  </div>
+
+  <div class="co-prod">
+    <div class="co-prod-img">📦</div>
+    <div>
+      <div class="co-prod-name">Premium Product</div>
+      <div class="co-prod-sub">Worldwide shipping · Free returns</div>
+      <div class="co-prod-price" style="font-size:26px;font-weight:800;color:#18181b">$97 <span style="font-size:14px;font-weight:500;color:#888">USD</span></div>
+    </div>
+  </div>
+
+  <div class="co-trust">
+    <span class="co-chip"><svg viewBox="0 0 12 12"><path d="M6 1l1.4 2.9 3.2.45-2.3 2.25.55 3.2L6 8.3l-2.85 1.5.55-3.2L1.4 4.35l3.2-.45z"/></svg>12k+ happy customers</span>
+    <span class="co-chip"><svg viewBox="0 0 12 12"><rect x="1.5" y="5" width="9" height="6" rx="1"/><path d="M3.5 5V4a2.5 2.5 0 015 0v1"/></svg>SSL secure checkout</span>
+    <span class="co-chip"><svg viewBox="0 0 12 12"><path d="M1.5 6l3 3 6-6"/></svg>30-day money back</span>
+    <span class="co-chip"><svg viewBox="0 0 12 12"><circle cx="6" cy="6" r="4.5"/><path d="M6 3.5V6l1.5 1.5"/></svg>Ships in 48h</span>
+  </div>
+
+  <div id="co-form">
+    <div class="co-prog-track"><div class="co-prog-fill" id="coprog" style="width:33%"></div></div>
+    <div class="co-steps">
+      <span class="co-step on" id="csl1">Contact</span>
+      <span class="co-step" id="csl2">Shipping</span>
+      <span class="co-step" id="csl3">Payment</span>
+    </div>
+
+    <div class="co-card" id="costep1">
+      <div class="co-stitle">Contact info</div>
+      <div class="co-fg">
+        <div class="co-row2">
+          <div class="co-f"><label>First name</label><input type="text" id="co-fn" placeholder="James" autocomplete="given-name"></div>
+          <div class="co-f"><label>Last name</label><input type="text" id="co-ln" placeholder="Wilson" autocomplete="family-name"></div>
+        </div>
+        <div class="co-f"><label>Email address</label><input type="email" id="co-em" placeholder="james@email.com" autocomplete="email"></div>
+        <div class="co-f">
+          <label>Phone number</label>
+          <div class="co-phone-row">
+            <div class="co-f co-phone-code co-selwrap">
+              <select id="co-pcode">
+                <option>🇺🇸 +1</option><option>🇬🇧 +44</option><option selected>🇧🇷 +55</option>
+                <option>🇩🇪 +49</option><option>🇫🇷 +33</option><option>🇪🇸 +34</option>
+                <option>🇮🇹 +39</option><option>🇯🇵 +81</option><option>🇨🇳 +86</option>
+                <option>🇮🇳 +91</option><option>🇲🇽 +52</option><option>🇦🇺 +61</option>
+                <option>🇷🇺 +7</option><option>🇰🇷 +82</option><option>🇦🇪 +971</option>
+                <option>🇸🇬 +65</option><option>🇳🇱 +31</option><option>🇸🇪 +46</option>
+              </select>
+            </div>
+            <div class="co-f" style="flex:1"><input type="tel" id="co-ph" placeholder="(11) 99999-9999" autocomplete="tel"></div>
+          </div>
+        </div>
+        <button class="co-btn-pay" onclick="cogo(2)" type="button" style="margin-top:4px">
+          Continue to shipping
+          <svg viewBox="0 0 18 18"><path d="M4 9h10M10 5l4 4-4 4"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="co-card" id="costep2" style="display:none">
+      <div class="co-stitle">Shipping address</div>
+      <div class="co-fg">
+        <div class="co-f"><label>Street address</label><input type="text" id="co-a1" placeholder="123 Main Street" autocomplete="address-line1"></div>
+        <div class="co-f"><label>Apartment, suite (optional)</label><input type="text" id="co-a2" placeholder="Apt 4B" autocomplete="address-line2"></div>
+        <div class="co-row2">
+          <div class="co-f"><label>City</label><input type="text" id="co-ct" placeholder="São Paulo" autocomplete="address-level2"></div>
+          <div class="co-f"><label>State / Province</label><input type="text" id="co-st" placeholder="SP" autocomplete="address-level1"></div>
+        </div>
+        <div class="co-row2">
+          <div class="co-f"><label>Postal code</label><input type="text" id="co-zp" placeholder="01310-100" autocomplete="postal-code"></div>
+          <div class="co-f co-selwrap"><label>Country</label>
+            <select id="co-cy" autocomplete="country">
+              <option value="US">🇺🇸 United States</option>
+              <option value="GB">🇬🇧 United Kingdom</option>
+              <option value="BR" selected>🇧🇷 Brazil</option>
+              <option value="CA">🇨🇦 Canada</option>
+              <option value="AU">🇦🇺 Australia</option>
+              <option value="DE">🇩🇪 Germany</option>
+              <option value="FR">🇫🇷 France</option>
+              <option value="ES">🇪🇸 Spain</option>
+              <option value="IT">🇮🇹 Italy</option>
+              <option value="MX">🇲🇽 Mexico</option>
+              <option value="AR">🇦🇷 Argentina</option>
+              <option value="JP">🇯🇵 Japan</option>
+              <option value="CN">🇨🇳 China</option>
+              <option value="IN">🇮🇳 India</option>
+              <option value="KR">🇰🇷 South Korea</option>
+              <option value="NL">🇳🇱 Netherlands</option>
+              <option value="SE">🇸🇪 Sweden</option>
+              <option value="CH">🇨🇭 Switzerland</option>
+              <option value="AE">🇦🇪 UAE</option>
+              <option value="SG">🇸🇬 Singapore</option>
+              <option value="PT">🇵🇹 Portugal</option>
+              <option value="PL">🇵🇱 Poland</option>
+              <option value="CL">🇨🇱 Chile</option>
+              <option value="CO">🇨🇴 Colombia</option>
+              <option value="NG">🇳🇬 Nigeria</option>
+              <option value="ZA">🇿🇦 South Africa</option>
+              <option value="TR">🇹🇷 Turkey</option>
+              <option value="other">🌍 Other</option>
+            </select>
+          </div>
+        </div>
+        <div class="co-btn-row">
+          <button class="co-btn-back" onclick="cogo(1)" type="button" aria-label="Back">
+            <svg viewBox="0 0 18 18"><path d="M14 9H4M8 13l-4-4 4-4"/></svg>
+          </button>
+          <button class="co-btn-pay" onclick="cogo(3)" type="button" style="flex:1">
+            Continue to payment
+            <svg viewBox="0 0 18 18"><path d="M4 9h10M10 5l4 4-4 4"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="co-card" id="costep3" style="display:none">
+      <div class="co-stitle">Payment details</div>
+      <div class="co-fg">
+        <div class="co-f"><label>Card number</label><div id="co-card-el" class="co-stripe-el"></div></div>
+        <div class="co-row2">
+          <div class="co-f"><label>Expiry date</label><div id="co-card-exp" class="co-stripe-el"></div></div>
+          <div class="co-f"><label>Security code (CVC)</label><div id="co-card-cvc" class="co-stripe-el"></div></div>
+        </div>
+        <div class="co-f"><label>Name on card</label><input type="text" id="co-cn" placeholder="James Wilson" autocomplete="cc-name"></div>
+      </div>
+
+      <div class="co-summary">
+        <div class="co-sum-line"><span>Subtotal</span><span>$97.00</span></div>
+        <div class="co-sum-line"><span>Shipping</span><span class="co-green">Free</span></div>
+        <div class="co-sum-line"><span>Taxes</span><span>$0.00</span></div>
+        <div class="co-sum-line co-sum-total"><span>Total due today</span><span>$97.00</span></div>
+      </div>
+
+      <div id="co-err" class="co-err"></div>
+
+      <div class="co-btn-row">
+        <button class="co-btn-back" onclick="cogo(2)" type="button" aria-label="Back">
+          <svg viewBox="0 0 18 18"><path d="M14 9H4M8 13l-4-4 4-4"/></svg>
+        </button>
+        <button class="co-btn-pay" id="co-pay-btn" onclick="coDoPay()" type="button" style="flex:1">
+          <svg viewBox="0 0 18 18"><rect x="2" y="5" width="14" height="10" rx="1.5"/><path d="M2 9h14"/></svg>
+          Pay $97.00 securely
+        </button>
+      </div>
+      <div class="co-secure">
+        <svg viewBox="0 0 12 12"><rect x="2" y="5" width="8" height="6" rx="1"/><path d="M4 5V4a2 2 0 014 0v1"/></svg>
+        256-bit SSL encryption · Powered by Stripe
+      </div>
+    </div>
+  </div>
+
+  <div class="co-card co-success" id="co-success">
+    <div class="co-success-ring"><svg viewBox="0 0 32 32"><path d="M6 16l7 7L26 9"/></svg></div>
+    <h2>Order confirmed!</h2>
+    <p>Thanks for your purchase.<br>A confirmation email is on its way to you.</p>
+    <div class="co-success-note">
+      <strong style="color:#18181b;display:block;margin-bottom:4px">What happens next?</strong>
+      Your order ships within 48 hours. Delivery takes 5–10 business days. Questions? Reply to your confirmation email.
+    </div>
+  </div>
+
+</div>
+</div>
+
+<script src="https://js.stripe.com/v3/"></script>
+<script>
+var coStripe,coCard,coExp,coCvc;
+
+function cogo(n){
+  [1,2,3].forEach(function(i){
+    var s=document.getElementById('costep'+i);
+    if(s)s.style.display=i===n?'block':'none';
+    var l=document.getElementById('csl'+i);
+    if(l)l.classList.toggle('on',i===n);
+  });
+  var w={1:'33%',2:'66%',3:'100%'};
+  document.getElementById('coprog').style.width=w[n]||'33%';
+  if(n===3&&!coStripe)coInit();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function coInit(){
+  try{
+    coStripe=Stripe('pk_test_YOUR_PUBLISHABLE_KEY_HERE');
+    var els=coStripe.elements();
+    var sty={base:{fontFamily:'-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif',fontSize:'15px',color:'#18181b','::placeholder':{color:'#c0c4cc'}},invalid:{color:'#dc2626'}};
+    coCard=els.create('cardNumber',{style:sty,showIcon:true});
+    coCard.mount('#co-card-el');
+    coExp=els.create('cardExpiry',{style:sty});
+    coExp.mount('#co-card-exp');
+    coCvc=els.create('cardCvc',{style:sty});
+    coCvc.mount('#co-card-cvc');
+  }catch(e){console.warn('Add your Stripe publishable key');}
+}
+
+async function coDoPay(){
+  var btn=document.getElementById('co-pay-btn');
+  var err=document.getElementById('co-err');
+  err.style.display='none';
+  if(!coStripe){
+    err.textContent='Configure sua chave Stripe (pk_test_...) para processar pagamentos reais.';
+    err.style.display='block';return;
+  }
+  btn.disabled=true;btn.textContent='Processing...';
+  try{
+    var r=await coStripe.createPaymentMethod({
+      type:'card',card:coCard,
+      billing_details:{
+        name:document.getElementById('co-cn').value||(document.getElementById('co-fn').value+' '+document.getElementById('co-ln').value),
+        email:document.getElementById('co-em').value,
+        address:{line1:document.getElementById('co-a1').value,city:document.getElementById('co-ct').value,state:document.getElementById('co-st').value,postal_code:document.getElementById('co-zp').value,country:document.getElementById('co-cy').value}
+      }
+    });
+    if(r.error){
+      err.textContent=r.error.message;err.style.display='block';
+      btn.disabled=false;btn.innerHTML='<svg viewBox="0 0 18 18" style="width:17px;height:17px;stroke:#fff;fill:none;stroke-width:2.5;stroke-linecap:round"><rect x="2" y="5" width="14" height="10" rx="1.5"/><path d="M2 9h14"/></svg> Pay $97.00 securely';
+    }else{
+      document.getElementById('co-form').style.display='none';
+      document.getElementById('co-success').style.display='block';
+    }
+  }catch(e){
+    err.textContent='Something went wrong. Please try again.';err.style.display='block';
+    btn.disabled=false;btn.innerHTML='<svg viewBox="0 0 18 18" style="width:17px;height:17px;stroke:#fff;fill:none;stroke-width:2.5;stroke-linecap:round"><rect x="2" y="5" width="14" height="10" rx="1.5"/><path d="M2 9h14"/></svg> Pay $97.00 securely';
+  }
+}
+</script>
