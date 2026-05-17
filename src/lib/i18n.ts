@@ -134,5 +134,6 @@ export const translations = {
 export type TranslationKey = keyof (typeof translations)["en"];
 
 export function t(locale: Locale, key: TranslationKey): string {
-  return translations[locale]?.[key] || translations.en[key] || key;
+  const table = translations as Record<Locale, typeof translations.en>;
+  return table[locale]?.[key] || translations.en[key] || key;
 }
