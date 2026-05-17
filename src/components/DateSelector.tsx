@@ -198,7 +198,7 @@ export default function DateSelector({ value, onChange }: DateSelectorProps) {
   );
 }
 
-export function filterByDateRange(orders: { created_at: string }[], range: DateRange) {
+export function filterByDateRange<T extends { created_at: string }>(orders: T[], range: DateRange): T[] {
   const startDate = new Date(range.start + "T00:00:00");
   const endDate = new Date(range.end + "T23:59:59");
 
