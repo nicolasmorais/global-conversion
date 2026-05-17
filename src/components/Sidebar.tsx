@@ -95,6 +95,7 @@ export default function Sidebar() {
         .nav-item:nth-child(7) { animation-delay: 0.62s; }
         .nav-item:nth-child(8) { animation-delay: 0.69s; }
         .nav-item:nth-child(9) { animation-delay: 0.76s; }
+        .nav-item:nth-child(10) { animation-delay: 0.83s; }
 
         :global(.nav-link) {
           display: flex;
@@ -314,6 +315,14 @@ export default function Sidebar() {
                 <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
               </span>
               <span>Personalização</span>
+            </Link>
+          </li>
+          <li className="nav-item">
+            <Link href="/admin/pixels" className={`nav-link ${isActive('/admin/pixels')}`}>
+              <span className="nav-icon">
+                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+              </span>
+              <span>Pixels</span>
             </Link>
           </li>
         </ul>

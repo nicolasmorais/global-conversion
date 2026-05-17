@@ -23,6 +23,7 @@ model Product {
   updated_at      DateTime @updatedAt
 
   orders          Order[]
+  pixels          ProductPixel[]
 
   @@unique([slug, locale])
   @@index([active])
@@ -99,4 +100,29 @@ model CheckoutSetting {
   button_color  String   @default("#111111")
   logo_url      String?
   updated_at    DateTime @updatedAt
+}
+
+model Pixel {
+  id         String          @id @default(cuid())
+  name       String
+  pixel_id   String          @unique // ID numérico do Taboola
+  platform   String          @default("taboola")
+  active     Boolean         @default(true)
+  created_at DateTime        @default(now())
+  updated_at DateTime        @updatedAt
+
+  products   ProductPixel[]
+
+  @@index([active])
+}
+
+model ProductPixel {
+  id         String  @id @default(cuid())
+  pixel_id   String
+  product_id String
+
+  pixel      Pixel   @relation(fields: [pixel_id], references: [id], onDelete: Cascade)
+  product    Product @relation(fields: [product_id], references: [id], onDelete: Cascade)
+
+  @@unique([pixel_id, product_id])
 }
