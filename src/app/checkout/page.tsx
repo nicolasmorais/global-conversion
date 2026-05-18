@@ -513,25 +513,36 @@ function CheckoutContent() {
 
   // Fetch active pixels for this product and inject scripts
   useEffect(() => {
-    if (!productId) return;
+    if (!productId) {
+      console.log("[Pixel] No productId, skipping");
+      return;
+    }
+    console.log("[Pixel] Fetching pixels for product:", productId);
     fetch(`/api/pixels/active?productId=${productId}`)
       .then((res) => res.json())
       .then((data) => {
-        if (!data.pixels) return;
+        console.log("[Pixel] API response:", data);
+        if (!data.pixels || data.pixels.length === 0) {
+          console.log("[Pixel] No pixels found for this product");
+          return;
+        }
         data.pixels.forEach((pixel: PixelData) => {
           if (pixel.platform !== "taboola") return;
           const scriptId = `taboola-pixel-${pixel.id}`;
           if (document.getElementById(scriptId)) return;
+          console.log("[Pixel] Injecting Taboola pixel:", pixel.pixel_id);
           window._tfa = window._tfa || [];
           window._tfa.push({ notify: "event", name: "page_view", id: Number(pixel.pixel_id) });
           const script = document.createElement("script");
           script.id = scriptId;
           script.async = true;
           script.src = `//cdn.taboola.com/libtrc/unip/${pixel.pixel_id}/tfa.js`;
+          script.onload = () => console.log("[Pixel] Taboola script loaded:", pixel.pixel_id);
+          script.onerror = () => console.error("[Pixel] Failed to load Taboola script:", pixel.pixel_id);
           document.head.appendChild(script);
         });
       })
-      .catch(() => {});
+      .catch((err) => console.error("[Pixel] Fetch error:", err));
   }, [productId]);
 
   // Fetch product

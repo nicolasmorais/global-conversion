@@ -188,7 +188,8 @@ function SuccessContent() {
               fetch(`/api/pixels/active?productId=${data.order.product_id}`)
                 .then((res) => res.json())
                 .then((pixelData) => {
-                  if (!pixelData.pixels) return;
+                  console.log("[Pixel] Success page pixels:", pixelData);
+                  if (!pixelData.pixels || pixelData.pixels.length === 0) return;
                   const orderAmount = data.order.amount || amount;
                   const orderCurrency = (data.order.currency || currency).toUpperCase();
                   pixelData.pixels.forEach((pixel: { pixel_id: string; platform: string }) => {
@@ -205,6 +206,7 @@ function SuccessContent() {
                       document.head.appendChild(script);
                     }
                     // Fire Purchase event
+                    console.log("[Pixel] Firing Purchase for:", pixel.pixel_id);
                     window._tfa = window._tfa || [];
                     window._tfa.push({
                       notify: "event",

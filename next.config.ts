@@ -33,12 +33,12 @@ const securityHeaders = [
     key: "Content-Security-Policy",
     value: [
       "default-src 'self'",
-      "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://js.stripe.com https://www.googletagmanager.com https://connect.facebook.net https://cdn.taboola.com",
+      "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://js.stripe.com https://www.googletagmanager.com https://connect.facebook.net https://cdn.taboola.com https://trc.taboola.com",
       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
-      "img-src 'self' data: https: blob:",
+      "img-src 'self' data: https: blob: https://images.taboola.com",
       "font-src 'self' https://fonts.gstatic.com",
       "frame-src 'self' https://js.stripe.com https://hooks.stripe.com",
-      "connect-src 'self' https://api.stripe.com https://vitals.vercel-insights.com https://www.google-analytics.com https://analytics.google.com https://graph.facebook.com https://cdn.taboola.com",
+      "connect-src 'self' https://api.stripe.com https://vitals.vercel-insights.com https://www.google-analytics.com https://analytics.google.com https://graph.facebook.com https://cdn.taboola.com https://trc.taboola.com https://images.taboola.com",
     ].join("; "),
   },
 ];
