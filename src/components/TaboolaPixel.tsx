@@ -25,21 +25,6 @@ export default function TaboolaPixel() {
   );
 }
 
-export function trackTaboolaPurchase(amount: number, currency: string, orderId: string) {
-  const pixelId = process.env.NEXT_PUBLIC_TABOOLA_PIXEL_ID;
-  if (!pixelId || typeof window === "undefined") return;
-
-  window._tfa = window._tfa || [];
-  window._tfa.push({
-    notify: "event",
-    name: "Purchase",
-    id: Number(pixelId),
-    revenue: amount / 100,
-    currency: currency.toUpperCase(),
-    orderid: orderId,
-  });
-}
-
 declare global {
   interface Window {
     _tfa: Array<Record<string, unknown>>;

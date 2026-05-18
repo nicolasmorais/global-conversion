@@ -515,7 +515,7 @@ function CheckoutContent() {
           const scriptId = `taboola-pixel-${pixel.id}`;
           if (document.getElementById(scriptId)) return;
           window._tfa = window._tfa || [];
-          window._tfa.push({ notify: "event", name: "page_view" });
+          window._tfa.push({ notify: "event", name: "page_view", id: Number(pixel.pixel_id) });
           const script = document.createElement("script");
           script.id = scriptId;
           script.async = true;

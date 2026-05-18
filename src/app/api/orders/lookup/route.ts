@@ -27,6 +27,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({
       order: {
         id: order.id,
+        product_id: order.product_id,
         product_name: order.product_name,
         amount: order.amount,
         currency: order.currency,

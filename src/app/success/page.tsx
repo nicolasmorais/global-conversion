@@ -2,16 +2,17 @@
 
 import { useEffect, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
-import { trackTaboolaPurchase } from "@/components/TaboolaPixel";
 
 declare global {
   interface Window {
     fbq?: (...args: unknown[]) => void;
+    _tfa: Array<Record<string, unknown>>;
   }
 }
 
 interface OrderData {
   id: string;
+  product_id: string | null;
   product_name: string;
   amount: number;
   currency: string;
@@ -173,18 +174,49 @@ function SuccessContent() {
       });
     }
 
-    // Taboola Pixel
-    if (amount > 0 && paymentIntent) {
-      trackTaboolaPurchase(amount, currency, paymentIntent);
-    }
-
-    // Fetch order details
+    // Fetch order details and fire Taboola pixels from database
     if (paymentIntent) {
       fetch(`/api/orders/lookup?pi=${paymentIntent}`)
         .then((res) => res.json())
         .then((data) => {
           if (data.order) {
             setOrder(data.order);
+
+            // Fetch active pixels for this product from database
+            if (data.order.product_id) {
+              fetch(`/api/pixels/active?productId=${data.order.product_id}`)
+                .then((res) => res.json())
+                .then((pixelData) => {
+                  if (!pixelData.pixels) return;
+                  const orderAmount = data.order.amount || amount;
+                  const orderCurrency = (data.order.currency || currency).toUpperCase();
+                  pixelData.pixels.forEach((pixel: { pixel_id: string; platform: string }) => {
+                    if (pixel.platform !== "taboola") return;
+                    // Load script if not already loaded
+                    const scriptId = `taboola-pixel-${pixel.pixel_id}`;
+                    if (!document.getElementById(scriptId)) {
+                      window._tfa = window._tfa || [];
+                      window._tfa.push({ notify: "event", name: "page_view", id: Number(pixel.pixel_id) });
+                      const script = document.createElement("script");
+                      script.id = scriptId;
+                      script.async = true;
+                      script.src = `//cdn.taboola.com/libtrc/unip/${pixel.pixel_id}/tfa.js`;
+                      document.head.appendChild(script);
+                    }
+                    // Fire Purchase event
+                    window._tfa = window._tfa || [];
+                    window._tfa.push({
+                      notify: "event",
+                      name: "Purchase",
+                      id: Number(pixel.pixel_id),
+                      revenue: orderAmount / 100,
+                      currency: orderCurrency,
+                      orderid: data.order.id,
+                    });
+                  });
+                })
+                .catch(() => {});
+            }
           }
         })
         .catch((err) => console.error("Failed to fetch order:", err))
