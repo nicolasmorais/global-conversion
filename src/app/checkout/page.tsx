@@ -532,7 +532,7 @@ function CheckoutContent() {
           if (document.getElementById(scriptId)) return;
           console.log("[Pixel] Injecting Taboola pixel:", pixel.pixel_id);
           window._tfa = window._tfa || [];
-          window._tfa.push({ notify: "event", name: "page_view", id: Number(pixel.pixel_id) });
+          window._tfa.push({ notify: "event", name: "StartCheckout", id: Number(pixel.pixel_id) });
           const script = document.createElement("script");
           script.id = scriptId;
           script.async = true;
