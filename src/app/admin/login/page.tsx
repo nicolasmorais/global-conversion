@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 export default function AdminLoginPage() {
@@ -88,7 +88,13 @@ export default function AdminLoginPage() {
     setCaptchaValue("");
   };
 
-  const isLocked = !!(lockoutUntil && Date.now() < lockoutUntil);
+  const [now, setNow] = useState(() => Date.now());
+  useEffect(() => {
+    if (!lockoutUntil) return;
+    const interval = setInterval(() => setNow(Date.now()), 1000);
+    return () => clearInterval(interval);
+  }, [lockoutUntil]);
+  const isLocked = !!(lockoutUntil && now < lockoutUntil);
 
   return (
     <div className="min-h-screen bg-[#ffffff] text-[#111111] flex items-center justify-center p-8 font-['Space_Grotesk',sans-serif]">

@@ -60,6 +60,7 @@ function formatShortDate(dateStr: string) {
 
 export default function AdminDashboardPage() {
   const [orders, setOrders] = useState<Order[]>([]);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars -- setTotal used below
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -72,7 +73,7 @@ export default function AdminDashboardPage() {
   }));
 
   useEffect(() => {
-    setMounted(true);
+    setMounted(true); // eslint-disable-line react-hooks/set-state-in-effect
   }, []);
 
   useEffect(() => {
@@ -751,7 +752,13 @@ export default function AdminDashboardPage() {
   );
 }
 
-function CustomTooltip({ active, payload, label }: any) {
+interface TooltipProps {
+  active?: boolean;
+  payload?: Array<{ dataKey: string; value: number }>;
+  label?: string;
+}
+
+function CustomTooltip({ active, payload, label }: TooltipProps) {
   if (!active || !payload?.length) return null;
   return (
     <div
@@ -765,7 +772,7 @@ function CustomTooltip({ active, payload, label }: any) {
       }}
     >
       <p style={{ fontSize: "0.65rem", color: "#6b7280", margin: "0 0 0.3rem 0", letterSpacing: "0.02em" }}>{label}</p>
-      {payload.map((p: any, i: number) => (
+      {payload.map((p, i) => (
         <p key={i} style={{ fontSize: "0.8rem", color: "#111111", margin: 0 }}>
           {p.dataKey === "receita"
             ? `R$ ${p.value.toFixed(2)}`

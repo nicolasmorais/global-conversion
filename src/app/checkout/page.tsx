@@ -454,7 +454,15 @@ function CheckoutContent() {
   const [paymentLoading, setPaymentLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [shippingCost, setShippingCost] = useState(0);
-  const [shippings, setShippings] = useState<any[]>([]);
+  interface Shipping {
+    id: string;
+    country: string;
+    price: number;
+    days_min: number;
+    days_max: number;
+    description: string | null;
+  }
+  const [shippings, setShippings] = useState<Shipping[]>([]);
   const localeCountryMap: Record<string, string> = { en: "US", es: "ES", pt: "BR", fr: "FR", de: "DE", it: "IT" };
   const [selectedCountry, setSelectedCountry] = useState(localeCountryMap[locale] || "US");
   const [buttonColor, setButtonColor] = useState("#111111");
@@ -488,8 +496,8 @@ function CheckoutContent() {
 
   // Update shipping cost when country changes
   useEffect(() => {
-    const shipping = shippings.find((s: any) => s.country === selectedCountry) || shippings.find((s: any) => s.country === "GLOBAL");
-    setShippingCost(shipping ? shipping.price : 0);
+    const shipping = shippings.find((s) => s.country === selectedCountry) || shippings.find((s) => s.country === "GLOBAL");
+    setShippingCost(shipping ? shipping.price : 0); // eslint-disable-line react-hooks/set-state-in-effect
   }, [selectedCountry, shippings]);
 
   // Fetch checkout settings
@@ -558,7 +566,7 @@ function CheckoutContent() {
     }
 
     fetchProduct();
-  }, [productId, locale]);
+  }, [productId, locale, t.productNotFound]);
 
   // Create PaymentIntent (recria quando shipping muda)
   useEffect(() => {

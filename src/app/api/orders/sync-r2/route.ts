@@ -5,6 +5,7 @@ import { prisma } from "@/lib/prisma";
 import { r2, R2_BUCKET } from "@/lib/r2";
 import { HeadObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3";
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export async function POST(request: NextRequest) {
   try {
     // Verify admin authentication

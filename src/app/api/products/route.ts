@@ -45,8 +45,8 @@ export async function POST(request: NextRequest) {
     });
 
     return NextResponse.json({ product }, { status: 201 });
-  } catch (error: any) {
-    if (error?.code === "P2002") {
+  } catch (error: unknown) {
+    if ((error as Record<string, string>)?.code === "P2002") {
       return NextResponse.json(
         { error: "Já existe um produto com esse slug e idioma" },
         { status: 409 }

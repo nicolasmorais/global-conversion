@@ -160,7 +160,7 @@ export default function OrdersTable({ orders, onUpdateTracking }: OrdersTablePro
             </tr>
           </thead>
           <tbody>
-            {orders.map((order, idx) => {
+            {orders.map((order) => {
               const status = statusConfig[order.status] || statusConfig.pending;
               const isEditing = editingId === order.id;
 

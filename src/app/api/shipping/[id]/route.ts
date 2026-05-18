@@ -39,7 +39,7 @@ export async function PATCH(
       return NextResponse.json({ error: "price não pode ser negativo" }, { status: 400 });
     }
 
-    const shipping = await updateShipping(id, sanitized as any);
+    const shipping = await updateShipping(id, sanitized as Record<string, unknown>);
     return NextResponse.json({ shipping });
   } catch (error) {
     console.error("[Shipping PATCH] Erro:", error);

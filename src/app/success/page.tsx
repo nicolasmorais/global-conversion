@@ -135,6 +135,7 @@ const successTranslations: Record<string, Record<string, string>> = {
   },
 };
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const countryNames: Record<string, string> = {
   BR: "Brasil", US: "Estados Unidos", PT: "Portugal", ES: "Espanha",
   FR: "França", DE: "Alemanha", IT: "Itália", GB: "Reino Unido",
@@ -222,7 +223,7 @@ function SuccessContent() {
         .catch((err) => console.error("Failed to fetch order:", err))
         .finally(() => setLoading(false));
     } else {
-      setLoading(false);
+      setLoading(false); // eslint-disable-line react-hooks/set-state-in-effect
     }
   }, [paymentIntent, amount, currency]);
 

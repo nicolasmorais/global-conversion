@@ -21,8 +21,9 @@ interface PurchaseEventData {
   ip?: string;
 }
 
+import crypto from "crypto";
+
 function hashSHA256(value: string): string {
-  const crypto = require("crypto");
   return crypto.createHash("sha256").update(value.trim().toLowerCase()).digest("hex");
 }
 

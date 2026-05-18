@@ -72,8 +72,8 @@ export default function AdminOrdersPage() {
   }
 
   useEffect(() => {
-    fetchOrders();
-  }, []);
+    fetchOrders(); // eslint-disable-line react-hooks/set-state-in-effect
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   async function handleSyncR2() {
     setSyncing(true);

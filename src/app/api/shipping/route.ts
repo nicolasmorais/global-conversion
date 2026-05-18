@@ -54,8 +54,8 @@ export async function POST(request: NextRequest) {
     });
 
     return NextResponse.json({ shipping }, { status: 201 });
-  } catch (error: any) {
-    if (error?.code === "P2002") {
+  } catch (error: unknown) {
+    if ((error as Record<string, string>)?.code === "P2002") {
       return NextResponse.json(
         { error: "Já existe frete para este país" },
         { status: 409 }

@@ -33,8 +33,8 @@ export async function PATCH(
     });
 
     return NextResponse.json({ pixel });
-  } catch (error: any) {
-    if (error?.code === "P2025") {
+  } catch (error: unknown) {
+    if ((error as Record<string, string>)?.code === "P2025") {
       return NextResponse.json({ error: "Pixel não encontrado" }, { status: 404 });
     }
     console.error("[Pixels PATCH] Erro:", error);
@@ -61,8 +61,8 @@ export async function DELETE(
     await prisma.pixel.delete({ where: { id } });
 
     return NextResponse.json({ success: true });
-  } catch (error: any) {
-    if (error?.code === "P2025") {
+  } catch (error: unknown) {
+    if ((error as Record<string, string>)?.code === "P2025") {
       return NextResponse.json({ error: "Pixel não encontrado" }, { status: 404 });
     }
     console.error("[Pixels DELETE] Erro:", error);

@@ -419,7 +419,7 @@ export default function ShippingPage() {
             </svg>
           </div>
           <p style={{ fontSize: "0.85rem", color: "#111111", margin: "0 0 0.25rem 0" }}>Nenhum frete cadastrado</p>
-          <p style={{ fontSize: "0.7rem", color: "#6b7280", margin: 0 }}>Clique em "Novo Frete" para começar</p>
+          <p style={{ fontSize: "0.7rem", color: "#6b7280", margin: 0 }}>Clique em &ldquo;Novo Frete&rdquo; para começar</p>
         </div>
       ) : (
         <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>

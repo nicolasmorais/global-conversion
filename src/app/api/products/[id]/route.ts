@@ -46,7 +46,7 @@ export async function PATCH(
       if (key in body) sanitized[key] = body[key];
     }
 
-    const product = await updateProduct(id, sanitized as any);
+    const product = await updateProduct(id, sanitized as Record<string, unknown>);
     return NextResponse.json({ product });
   } catch (error) {
     console.error("[Product PATCH] Erro:", error);
