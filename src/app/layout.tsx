@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Manrope } from "next/font/google";
 import "./globals.css";
 import MetaPixel from "@/components/MetaPixel";
-import TaboolaPixel from "@/components/TaboolaPixel";
 
 const manrope = Manrope({
   subsets: ["latin"],
@@ -23,7 +22,6 @@ export default function RootLayout({
     <html lang="pt-BR">
       <body className={`${manrope.variable} font-sans antialiased`}>
         <MetaPixel />
-        <TaboolaPixel />
         {children}
       </body>
     </html>
